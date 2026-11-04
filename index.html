@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My CGPA Calculator</title>
+
+  <!-- CSS: this part controls how the page looks -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    .box {
+      background-color: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input {
+      padding: 8px;
+      margin: 4px;
+      width: 28%;
+    }
+    button {
+      padding: 10px 16px;
+      margin-top: 10px;
+      background-color: #2d6cdf;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #result {
+      font-size: 24px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HTML: this part is the content of the page -->
+  <div class="box">
+    <h1>CGPA Calculator</h1>
+    <p>Enter your marks and credits for each course.</p>
+
+    <div id="courses">
+      <div class="course">
+        <input type="text" placeholder="Course name">
+        <input type="number" placeholder="Marks">
+        <input type="number" placeholder="Credits">
+      </div>
+    </div>
+
+    <button onclick="addCourse()">+ Add course</button>
+    <button onclick="calculate()">Calculate GPA</button>
+
+    <div id="result"></div>
+  </div>
+
+  <!-- JavaScript: this part makes the page do things -->
+  <script>
+    // Turn marks into a grade point (4.00 scale)
+    function marksToGradePoint(marks) {
+      if (marks >= 80) return 4.00;
+      if (marks >= 75) return 3.75;
+      if (marks >= 70) return 3.50;
+      if (marks >= 65) return 3.25;
+      if (marks >= 60) return 3.00;
+      if (marks >= 55) return 2.75;
+      if (marks >= 50) return 2.50;
+      if (marks >= 45) return 2.25;
+      if (marks >= 40) return 2.00;
+      return 0.00;
+    }
+
+    // Add a new empty row for another course
+    function addCourse() {
+      var row = document.createElement("div");
+      row.className = "course";
+      row.innerHTML =
+        '<input type="text" placeholder="Course name"> ' +
+        '<input type="number" placeholder="Marks"> ' +
+        '<input type="number" placeholder="Credits">';
+      document.getElementById("courses").appendChild(row);
+    }
+
+    // Calculate the GPA from all rows
+    function calculate() {
+      var rows = document.getElementsByClassName("course");
+      var totalPoints = 0;
+      var totalCredits = 0;
+
+      for (var i = 0; i < rows.length; i++) {
+        var inputs = rows[i].getElementsByTagName("input");
+        var marks = parseFloat(inputs[1].value);
+        var credits = parseFloat(inputs[2].value);
+
+        // skip rows that are empty
+        if (isNaN(marks) || isNaN(credits)) continue;
+
+        totalPoints += marksToGradePoint(marks) * credits;
+        totalCredits += credits;
+      }
+
+      var result = document.getElementById("result");
+      if (totalCredits === 0) {
+        result.innerText = "Please enter marks and credits.";
+      } else {
+        result.innerText = "Your GPA: " + (totalPoints / totalCredits).toFixed(2);
+      }
+    }
+  </script>
+</body>
+</html>
